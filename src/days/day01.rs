@@ -4,9 +4,19 @@ pub fn run(input: &'static str, _: bool) -> anyhow::Result<DayResult> {
     let part1: u32 = input
         .lines()
         .map(|line| {
-            let first = line.chars().find(|c| c.is_numeric()).unwrap();
-            let last = line.chars().rev().find(|c| c.is_numeric()).unwrap();
-            format!("{}{}", first, last).parse::<u32>().unwrap()
+            line.chars()
+                .find(|c| c.is_numeric())
+                .unwrap()
+                .to_digit(10)
+                .unwrap()
+                * 10
+                + line
+                    .chars()
+                    .rev()
+                    .find(|c| c.is_numeric())
+                    .unwrap()
+                    .to_digit(10)
+                    .unwrap()
         })
         .sum();
 
