@@ -1,10 +1,9 @@
 use crate::{DayResult, IntoDayResult};
 
-pub fn run(input: &'static str, _: bool) -> anyhow::Result<DayResult> {
+pub fn part1(input: &'static str, _: bool) -> anyhow::Result<DayResult> {
     let part1: u32 = input
         .lines()
         .map(|line| {
-            println!("{}", line);
             line.chars()
                 .find(|c| c.is_numeric())
                 .unwrap()
@@ -20,7 +19,10 @@ pub fn run(input: &'static str, _: bool) -> anyhow::Result<DayResult> {
                     .unwrap()
         })
         .sum();
+    (part1).into_result()
+}
 
+pub fn part2(input: &'static str, _: bool) -> anyhow::Result<DayResult> {
     let nums: Vec<&str> = vec![
         "one", "two", "three", "four", "five", "six", "seven", "eight", "nine",
     ];
@@ -33,17 +35,16 @@ pub fn run(input: &'static str, _: bool) -> anyhow::Result<DayResult> {
         for (i, c) in line.chars().enumerate() {
             let mut cur = None;
 
-            if c.is_digit(10) {
-                cur = Some(c.to_digit(10).unwrap() as u32);
+            if c.is_ascii_digit() {
+                cur = c.to_digit(10);
             }
             for (j, num) in nums.iter().enumerate() {
-                if line.len() >= num.len() {
-                    if i <= line.len() - num.len() {
-                        if line[i..(i + num.len())] == **num {
-                            cur = Some(j as u32 + 1);
-                            break;
-                        }
-                    }
+                if line.len() >= num.len()
+                    && i <= line.len() - num.len()
+                    && line[i..(i + num.len())] == **num
+                {
+                    cur = Some(j as u32 + 1);
+                    break;
                 }
             }
 
@@ -58,34 +59,47 @@ pub fn run(input: &'static str, _: bool) -> anyhow::Result<DayResult> {
         part2 += first.unwrap() * 10 + last.unwrap()
     }
 
-    (part1, part2).into_result()
+    (part2).into_result()
 }
 
 #[cfg(test)]
 mod tests {
-    use super::run;
+    use super::part1;
+    use super::part2;
     use crate::{Answers, DayResult};
 
     #[test]
-    fn test_example_answers() {
-        let result = run(include_str!("../../input/test/01.txt"), false);
+    fn test_part1() {
+        let example1 = part1(include_str!("../../input/day1/example1.txt"), false);
         assert_eq!(
-            result.unwrap(),
+            example1.unwrap(),
             DayResult {
-                part1: Some(Answers::U32(351)),
-                part2: Some(Answers::U32(340)),
+                answers: Some(Answers::U32(142)),
+            }
+        );
+        let real1 = part1(include_str!("../../input/day1/real1.txt"), false);
+        assert_eq!(
+            real1.unwrap(),
+            DayResult {
+                answers: Some(Answers::U32(54601)),
             }
         );
     }
 
     #[test]
-    fn test_answers() {
-        let result = run(include_str!("../../input/real/01.txt"), false);
+    fn test_part2() {
+        let example2 = part2(include_str!("../../input/day1/example2.txt"), false);
         assert_eq!(
-            result.unwrap(),
+            example2.unwrap(),
             DayResult {
-                part1: Some(Answers::U32(54601)),
-                part2: Some(Answers::U32(54078)),
+                answers: Some(Answers::U32(281)),
+            }
+        );
+        let real2 = part2(include_str!("../../input/day1/real2.txt"), false);
+        assert_eq!(
+            real2.unwrap(),
+            DayResult {
+                answers: Some(Answers::U32(54078)),
             }
         );
     }

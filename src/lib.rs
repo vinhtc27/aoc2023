@@ -105,10 +105,7 @@ pub trait IntoDayResult {
 
 impl IntoDayResult for () {
     fn into_result(self) -> anyhow::Result<DayResult> {
-        Ok(DayResult {
-            part1: None,
-            part2: None,
-        })
+        Ok(DayResult { answers: None })
     }
 }
 
@@ -118,72 +115,67 @@ where
 {
     fn into_result(self) -> anyhow::Result<DayResult> {
         Ok(DayResult {
-            part1: Some(self.into()),
-            part2: None,
-        })
-    }
-}
-
-impl<A, B> IntoDayResult for (A, B)
-where
-    A: Into<Answers>,
-    B: Into<Answers>,
-{
-    fn into_result(self) -> anyhow::Result<DayResult> {
-        let (a, b) = self;
-        Ok(DayResult {
-            part1: Some(a.into()),
-            part2: Some(b.into()),
+            answers: Some(self.into()),
         })
     }
 }
 
 #[derive(Debug, PartialEq, Eq)]
 pub struct DayResult {
-    pub part1: Option<Answers>,
-    pub part2: Option<Answers>,
+    pub answers: Option<Answers>,
 }
 
 pub struct DayEntry {
-    pub f: fn(&'static str, bool) -> anyhow::Result<DayResult>,
-    pub real: &'static str,
-    pub test: &'static str,
+    pub f1: fn(&'static str, bool) -> anyhow::Result<DayResult>,
+    pub real1: &'static str,
+    pub example1: &'static str,
+    pub f2: fn(&'static str, bool) -> anyhow::Result<DayResult>,
+    pub real2: &'static str,
+    pub example2: &'static str,
 }
 
 pub fn run_day(
     day: u32,
-    DayEntry { f, real, test }: &DayEntry,
-    is_test: bool,
+    DayEntry {
+        f1,
+        real1,
+        example1,
+        f2,
+        real2,
+        example2,
+    }: &DayEntry,
+    is_exaple: bool,
 ) -> anyhow::Result<()> {
-    let input = if is_test { *test } else { *real };
-
-    let start = Instant::now();
-    let answer = f(input, is_test)?;
-    let end = start.elapsed();
-
-    println!("day {}:", day);
-
-    if let Some(part1) = answer.part1 {
-        println!("part 1:");
+    let input1 = if is_exaple { *example1 } else { *real1 };
+    let start1 = Instant::now();
+    let result1 = f1(input1, is_exaple)?;
+    let end1 = start1.elapsed();
+    println!("Day {} - Part 1:", day);
+    if let Some(part1) = result1.answers {
         let part1 = format!("{part1}");
         for line in part1.lines() {
             println!("\t{line}");
         }
     }
+    println!("Duration:");
+    println!("\t{} µs", end1.as_micros());
+    println!("\t{} ns", end1.as_nanos());
+    println!();
 
-    if let Some(part2) = answer.part2 {
-        println!("part 2:");
+    let input2 = if is_exaple { *example2 } else { *real2 };
+    let start2 = Instant::now();
+    let result2 = f2(input2, is_exaple)?;
+    let end2 = start2.elapsed();
+    println!("Day {} - Part 2:", day);
+    if let Some(part2) = result2.answers {
         let part2 = format!("{part2}");
         for line in part2.lines() {
             println!("\t{line}");
         }
     }
-
     println!("Duration:");
-    println!("\t{} s", end.as_secs());
-    println!("\t{} ms", end.as_millis());
-    println!("\t{} us", end.as_micros());
-    println!("\t{} ns", end.as_nanos());
+    println!("\t{} µs", end2.as_micros());
+    println!("\t{} ns", end2.as_nanos());
     println!();
 
     Ok(())

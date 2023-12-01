@@ -7,6 +7,9 @@ unuse:
 bench:
 	cargo +nightly bench
 
+lint:
+	cargo clippy
+
 run:
 	cargo run
 
