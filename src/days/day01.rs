@@ -4,6 +4,7 @@ pub fn run(input: &'static str, _: bool) -> anyhow::Result<DayResult> {
     let part1: u32 = input
         .lines()
         .map(|line| {
+            println!("{}", line);
             line.chars()
                 .find(|c| c.is_numeric())
                 .unwrap()
@@ -20,7 +21,42 @@ pub fn run(input: &'static str, _: bool) -> anyhow::Result<DayResult> {
         })
         .sum();
 
-    let part2 = 0;
+    let nums: Vec<&str> = vec![
+        "one", "two", "three", "four", "five", "six", "seven", "eight", "nine",
+    ];
+
+    let mut part2 = 0;
+    for line in input.lines() {
+        let mut first = None;
+        let mut last = None;
+
+        for (i, c) in line.chars().enumerate() {
+            let mut cur = None;
+
+            if c.is_digit(10) {
+                cur = Some(c.to_digit(10).unwrap() as u32);
+            }
+            for (j, num) in nums.iter().enumerate() {
+                if line.len() >= num.len() {
+                    if i <= line.len() - num.len() {
+                        if line[i..(i + num.len())] == **num {
+                            cur = Some(j as u32 + 1);
+                            break;
+                        }
+                    }
+                }
+            }
+
+            if cur.is_some() {
+                if first.is_none() {
+                    first = cur;
+                }
+                last = cur;
+            }
+        }
+
+        part2 += first.unwrap() * 10 + last.unwrap()
+    }
 
     (part1, part2).into_result()
 }
@@ -36,8 +72,8 @@ mod tests {
         assert_eq!(
             result.unwrap(),
             DayResult {
-                part1: Some(Answers::U32(142)),
-                part2: Some(Answers::U32(0)),
+                part1: Some(Answers::U32(351)),
+                part2: Some(Answers::U32(340)),
             }
         );
     }
@@ -49,7 +85,7 @@ mod tests {
             result.unwrap(),
             DayResult {
                 part1: Some(Answers::U32(54601)),
-                part2: Some(Answers::U32(207_968)),
+                part2: Some(Answers::U32(54078)),
             }
         );
     }
