@@ -126,10 +126,10 @@ pub struct DayResult {
 }
 
 pub struct DayEntry {
-    pub f1: fn(&'static str, bool) -> anyhow::Result<DayResult>,
+    pub f1: fn(&'static str) -> anyhow::Result<DayResult>,
     pub real1: &'static str,
     pub example1: &'static str,
-    pub f2: fn(&'static str, bool) -> anyhow::Result<DayResult>,
+    pub f2: fn(&'static str) -> anyhow::Result<DayResult>,
     pub real2: &'static str,
     pub example2: &'static str,
 }
@@ -148,7 +148,7 @@ pub fn run_day(
 ) -> anyhow::Result<()> {
     let input1 = if is_exaple { *example1 } else { *real1 };
     let start1 = Instant::now();
-    let result1 = f1(input1, is_exaple)?;
+    let result1 = f1(input1)?;
     let end1 = start1.elapsed();
     println!("Day {} - Part 1:", day);
     if let Some(part1) = result1.answers {
@@ -164,7 +164,7 @@ pub fn run_day(
 
     let input2 = if is_exaple { *example2 } else { *real2 };
     let start2 = Instant::now();
-    let result2 = f2(input2, is_exaple)?;
+    let result2 = f2(input2)?;
     let end2 = start2.elapsed();
     println!("Day {} - Part 2:", day);
     if let Some(part2) = result2.answers {

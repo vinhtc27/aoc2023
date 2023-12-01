@@ -1,6 +1,6 @@
 use crate::{DayResult, IntoDayResult};
 
-pub fn part1(input: &'static str, _: bool) -> anyhow::Result<DayResult> {
+pub fn part1(input: &'static str) -> anyhow::Result<DayResult> {
     let part1: u32 = input
         .lines()
         .map(|line| {
@@ -22,7 +22,7 @@ pub fn part1(input: &'static str, _: bool) -> anyhow::Result<DayResult> {
     (part1).into_result()
 }
 
-pub fn part2(input: &'static str, _: bool) -> anyhow::Result<DayResult> {
+pub fn part2(input: &'static str) -> anyhow::Result<DayResult> {
     let nums: Vec<&str> = vec![
         "one", "two", "three", "four", "five", "six", "seven", "eight", "nine",
     ];
@@ -70,14 +70,14 @@ mod tests {
 
     #[test]
     fn test_part1() {
-        let example1 = part1(include_str!("../../input/day1/example1.txt"), false);
+        let example1 = part1(include_str!("../../input/day1/example1.txt"));
         assert_eq!(
             example1.unwrap(),
             DayResult {
                 answers: Some(Answers::U32(142)),
             }
         );
-        let real1 = part1(include_str!("../../input/day1/real1.txt"), false);
+        let real1 = part1(include_str!("../../input/day1/real1.txt"));
         assert_eq!(
             real1.unwrap(),
             DayResult {
@@ -88,14 +88,14 @@ mod tests {
 
     #[test]
     fn test_part2() {
-        let example2 = part2(include_str!("../../input/day1/example2.txt"), false);
+        let example2 = part2(include_str!("../../input/day1/example2.txt"));
         assert_eq!(
             example2.unwrap(),
             DayResult {
                 answers: Some(Answers::U32(281)),
             }
         );
-        let real2 = part2(include_str!("../../input/day1/real2.txt"), false);
+        let real2 = part2(include_str!("../../input/day1/real2.txt"));
         assert_eq!(
             real2.unwrap(),
             DayResult {
