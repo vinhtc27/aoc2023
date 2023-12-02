@@ -6,7 +6,7 @@ pub fn part1_sol1(input: &'static str) -> anyhow::Result<DayResult> {
         .map(|line| {
             let digits: Vec<u32> = line
                 .chars()
-                .filter(|c| c.is_digit(10))
+                .filter(|c| c.is_ascii_digit())
                 .map(|c| c.to_digit(10).unwrap())
                 .collect();
             if digits.is_empty() {
@@ -73,6 +73,34 @@ pub fn part1_sol4(input: &'static str) -> anyhow::Result<DayResult> {
         })
         .sum();
 
+    (part1).into_result()
+}
+
+pub fn part1_sol5(input: &'static str) -> anyhow::Result<DayResult> {
+    let mut numbers = Vec::with_capacity(20000);
+    for line in input.lines() {
+        let line = line.as_bytes();
+        let mut first_digit = 0u32;
+        let mut second_digit = 0u32;
+        let mut initiated = false;
+        for byte in line {
+            if (48..58).contains(byte) {
+                if initiated {
+                    second_digit = *byte as u32 - 48;
+                } else {
+                    first_digit = *byte as u32 - 48;
+                    second_digit = first_digit;
+                    initiated = true;
+                }
+            }
+        }
+        let number = first_digit * 10 + second_digit;
+        numbers.push(number);
+    }
+    let mut part1: u32 = 0;
+    for number in numbers {
+        part1 += number;
+    }
     (part1).into_result()
 }
 

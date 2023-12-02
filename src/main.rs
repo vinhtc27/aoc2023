@@ -39,6 +39,7 @@ fn get_days() -> Vec<DayEntry> {
             day01::part1_sol2,
             day01::part1_sol3,
             day01::part1_sol4,
+            day01::part1_sol5,
         ],
         real1: include_str!("../input/day1/real1.txt"),
         example1: include_str!("../input/day1/example1.txt"),
