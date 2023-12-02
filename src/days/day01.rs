@@ -1,4 +1,5 @@
 use crate::{DayResult, IntoDayResult};
+use daachorse::DoubleArrayAhoCorasick;
 
 pub fn part1_sol1(input: &'static str) -> anyhow::Result<DayResult> {
     let part1: u32 = input
@@ -145,6 +146,45 @@ pub fn part2_sol1(input: &'static str) -> anyhow::Result<DayResult> {
 }
 
 pub fn part2_sol2(input: &'static str) -> anyhow::Result<DayResult> {
+    let patterns = vec![
+        ("one", 1),
+        ("two", 2),
+        ("three", 3),
+        ("four", 4),
+        ("five", 5),
+        ("six", 6),
+        ("seven", 7),
+        ("eight", 8),
+        ("nine", 9),
+        ("1", 1),
+        ("2", 2),
+        ("3", 3),
+        ("4", 4),
+        ("5", 5),
+        ("6", 6),
+        ("7", 7),
+        ("8", 8),
+        ("9", 9),
+    ];
+    let da = DoubleArrayAhoCorasick::with_values(patterns).unwrap();
+    let mut numbers = Vec::with_capacity(20000);
+    let mut vec = Vec::with_capacity(20);
+    for line in input.lines() {
+        for digit in da.find_overlapping_iter(line) {
+            vec.push(digit.value());
+        }
+        let number = unsafe { vec.get_unchecked(0) * 10 + vec.get_unchecked(vec.len() - 1) };
+        numbers.push(number);
+        vec.clear();
+    }
+    let mut part2: u32 = 0;
+    for number in numbers {
+        part2 += number as u32;
+    }
+    (part2).into_result()
+}
+
+pub fn part2_sol3(input: &'static str) -> anyhow::Result<DayResult> {
     let part2: u32 = input
         .lines()
         .map(|line| {
@@ -186,7 +226,7 @@ pub fn part2_sol2(input: &'static str) -> anyhow::Result<DayResult> {
 #[cfg(test)]
 mod tests {
     use super::part1_sol4;
-    use super::part2_sol2;
+    use super::part2_sol3;
     use crate::{Answers, DayResult};
 
     #[test]
@@ -209,14 +249,14 @@ mod tests {
 
     #[test]
     fn test_part2() {
-        let example2 = part2_sol2(include_str!("../../input/day1/example2.txt"));
+        let example2 = part2_sol3(include_str!("../../input/day1/example2.txt"));
         assert_eq!(
             example2.unwrap(),
             DayResult {
                 answers: Some(Answers::U32(281)),
             }
         );
-        let real2 = part2_sol2(include_str!("../../input/day1/real2.txt"));
+        let real2 = part2_sol3(include_str!("../../input/day1/real2.txt"));
         assert_eq!(
             real2.unwrap(),
             DayResult {

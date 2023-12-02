@@ -23,6 +23,9 @@ fn bench_days(c: &mut Criterion) {
     c.bench_function("Day 1 - Part2 - Solution 2", |b| {
         b.iter(|| day01::part2_sol2(black_box(include_str!("../input/day1/real2.txt"))))
     });
+    c.bench_function("Day 1 - Part2 - Solution 3", |b| {
+        b.iter(|| day01::part2_sol3(black_box(include_str!("../input/day1/real2.txt"))))
+    });
 }
 
 criterion_group!(benches, bench_days);
