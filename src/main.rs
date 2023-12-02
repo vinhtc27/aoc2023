@@ -1,5 +1,6 @@
 use aoc2023::{days, DayEntry};
 use aoc2023::{run_day, Runnable};
+use days::day01;
 
 use anyhow::Context;
 
@@ -33,10 +34,15 @@ fn main() -> anyhow::Result<()> {
 
 fn get_days() -> Vec<DayEntry> {
     vec![DayEntry {
-        f1: days::day01::part1,
+        part1s: vec![
+            day01::part1_sol1,
+            day01::part1_sol2,
+            day01::part1_sol3,
+            day01::part1_sol4,
+        ],
         real1: include_str!("../input/day1/real1.txt"),
         example1: include_str!("../input/day1/example1.txt"),
-        f2: days::day01::part2,
+        part2s: vec![day01::part2],
         real2: include_str!("../input/day1/real2.txt"),
         example2: include_str!("../input/day1/example2.txt"),
     }]

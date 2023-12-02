@@ -1,6 +1,59 @@
 use crate::{DayResult, IntoDayResult};
 
-pub fn part1(input: &'static str) -> anyhow::Result<DayResult> {
+pub fn part1_sol1(input: &'static str) -> anyhow::Result<DayResult> {
+    let part1: u32 = input
+        .lines()
+        .map(|line| {
+            let digits: Vec<u32> = line
+                .chars()
+                .filter(|c| c.is_digit(10))
+                .map(|c| c.to_digit(10).unwrap())
+                .collect();
+            if digits.is_empty() {
+                0
+            } else {
+                digits[0] * 10 + digits.last().unwrap_or(&0)
+            }
+        })
+        .sum();
+    (part1).into_result()
+}
+
+pub fn part1_sol2(input: &'static str) -> anyhow::Result<DayResult> {
+    let part1: u32 = input
+        .lines()
+        .map(|line| {
+            let first = line.chars().find(|c| c.is_numeric()).unwrap();
+            let last = line.chars().rev().find(|c| c.is_numeric()).unwrap();
+            format!("{}{}", first, last).parse::<u32>().unwrap()
+        })
+        .sum();
+    (part1).into_result()
+}
+
+pub fn part1_sol3(input: &'static str) -> anyhow::Result<DayResult> {
+    let part1: u32 = input
+        .lines()
+        .map(|line| {
+            let mut first = None;
+            let mut last = None;
+
+            for c in line.chars() {
+                if c.is_ascii_digit() {
+                    if first.is_none() {
+                        first = c.to_digit(10);
+                    }
+                    last = c.to_digit(10);
+                }
+            }
+
+            first.unwrap_or(0) * 10 + last.unwrap_or(0)
+        })
+        .sum();
+    (part1).into_result()
+}
+
+pub fn part1_sol4(input: &'static str) -> anyhow::Result<DayResult> {
     let part1: u32 = input
         .lines()
         .map(|line| {
@@ -19,6 +72,7 @@ pub fn part1(input: &'static str) -> anyhow::Result<DayResult> {
                     .unwrap()
         })
         .sum();
+
     (part1).into_result()
 }
 
@@ -64,20 +118,20 @@ pub fn part2(input: &'static str) -> anyhow::Result<DayResult> {
 
 #[cfg(test)]
 mod tests {
-    use super::part1;
+    use super::part1_sol4;
     use super::part2;
     use crate::{Answers, DayResult};
 
     #[test]
     fn test_part1() {
-        let example1 = part1(include_str!("../../input/day1/example1.txt"));
+        let example1 = part1_sol4(include_str!("../../input/day1/example1.txt"));
         assert_eq!(
             example1.unwrap(),
             DayResult {
                 answers: Some(Answers::U32(142)),
             }
         );
-        let real1 = part1(include_str!("../../input/day1/real1.txt"));
+        let real1 = part1_sol4(include_str!("../../input/day1/real1.txt"));
         assert_eq!(
             real1.unwrap(),
             DayResult {

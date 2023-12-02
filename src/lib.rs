@@ -126,10 +126,10 @@ pub struct DayResult {
 }
 
 pub struct DayEntry {
-    pub f1: fn(&'static str) -> anyhow::Result<DayResult>,
+    pub part1s: Vec<fn(&'static str) -> anyhow::Result<DayResult>>,
     pub real1: &'static str,
     pub example1: &'static str,
-    pub f2: fn(&'static str) -> anyhow::Result<DayResult>,
+    pub part2s: Vec<fn(&'static str) -> anyhow::Result<DayResult>>,
     pub real2: &'static str,
     pub example2: &'static str,
 }
@@ -137,47 +137,56 @@ pub struct DayEntry {
 pub fn run_day(
     day: u32,
     DayEntry {
-        f1,
+        part1s,
         real1,
         example1,
-        f2,
+        part2s,
         real2,
         example2,
     }: &DayEntry,
     is_exaple: bool,
 ) -> anyhow::Result<()> {
     let input1 = if is_exaple { *example1 } else { *real1 };
-    let start1 = Instant::now();
-    let result1 = f1(input1)?;
-    let end1 = start1.elapsed();
     println!("Day {} - Part 1:", day);
-    if let Some(part1) = result1.answers {
-        let part1 = format!("{part1}");
-        for line in part1.lines() {
-            println!("\t{line}");
+    for (sol, part) in part1s.iter().enumerate() {
+        let now = Instant::now();
+        let result = part(input1)?;
+        let duration = now.elapsed();
+        print!("+ Solution {} | Output: ", sol + 1);
+        if let Some(output) = result.answers {
+            let output = format!("{output}");
+            for line in output.lines() {
+                print!("{line} ");
+            }
         }
+        println!(
+            "- Duration {} µs - {} ns",
+            duration.as_micros(),
+            duration.as_nanos()
+        );
     }
-    println!("Duration:");
-    println!("\t{} µs", end1.as_micros());
-    println!("\t{} ns", end1.as_nanos());
-    println!();
 
     let input2 = if is_exaple { *example2 } else { *real2 };
-    let start2 = Instant::now();
-    let result2 = f2(input2)?;
-    let end2 = start2.elapsed();
     println!("Day {} - Part 2:", day);
-    if let Some(part2) = result2.answers {
-        let part2 = format!("{part2}");
-        for line in part2.lines() {
-            println!("\t{line}");
+    for (sol, part) in part2s.iter().enumerate() {
+        let now = Instant::now();
+        let result = part(input2)?;
+        let duration = now.elapsed();
+        print!("+ Solution {} | Output: ", sol + 1);
+        if let Some(output) = result.answers {
+            let output = format!("{output}");
+            for line in output.lines() {
+                print!("{line} ");
+            }
         }
+        println!(
+            "- Duration {} µs - {} ns",
+            duration.as_micros(),
+            duration.as_nanos()
+        );
     }
-    println!("Duration:");
-    println!("\t{} µs", end2.as_micros());
-    println!("\t{} ns", end2.as_nanos());
-    println!();
 
+    println!();
     Ok(())
 }
 

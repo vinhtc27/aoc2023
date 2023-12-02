@@ -5,7 +5,7 @@ unuse:
 	cargo +nightly udeps --all-targets
 
 bench:
-	cargo +nightly bench
+	cargo bench
 
 lint:
 	cargo clippy
