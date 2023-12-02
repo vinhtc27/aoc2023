@@ -104,7 +104,7 @@ pub fn part1_sol5(input: &'static str) -> anyhow::Result<DayResult> {
     (part1).into_result()
 }
 
-pub fn part2(input: &'static str) -> anyhow::Result<DayResult> {
+pub fn part2_sol1(input: &'static str) -> anyhow::Result<DayResult> {
     let nums: Vec<&str> = vec![
         "one", "two", "three", "four", "five", "six", "seven", "eight", "nine",
     ];
@@ -144,10 +144,49 @@ pub fn part2(input: &'static str) -> anyhow::Result<DayResult> {
     (part2).into_result()
 }
 
+pub fn part2_sol2(input: &'static str) -> anyhow::Result<DayResult> {
+    let part2: u32 = input
+        .lines()
+        .map(|line| {
+            let mut line = (0..line.len()).filter_map(|index| {
+                let reduced_line = &line[index..];
+                let sub_line = if reduced_line.starts_with("one") {
+                    '1'
+                } else if reduced_line.starts_with("two") {
+                    '2'
+                } else if reduced_line.starts_with("three") {
+                    '3'
+                } else if reduced_line.starts_with("four") {
+                    '4'
+                } else if reduced_line.starts_with("five") {
+                    '5'
+                } else if reduced_line.starts_with("six") {
+                    '6'
+                } else if reduced_line.starts_with("seven") {
+                    '7'
+                } else if reduced_line.starts_with("eight") {
+                    '8'
+                } else if reduced_line.starts_with("nine") {
+                    '9'
+                } else {
+                    reduced_line.chars().next().unwrap()
+                };
+                sub_line.to_digit(10)
+            });
+            let first = line.next().unwrap();
+            match line.last() {
+                Some(last) => first * 10 + last,
+                None => first * 10 + first,
+            }
+        })
+        .sum();
+    (part2).into_result()
+}
+
 #[cfg(test)]
 mod tests {
     use super::part1_sol4;
-    use super::part2;
+    use super::part2_sol2;
     use crate::{Answers, DayResult};
 
     #[test]
@@ -170,14 +209,14 @@ mod tests {
 
     #[test]
     fn test_part2() {
-        let example2 = part2(include_str!("../../input/day1/example2.txt"));
+        let example2 = part2_sol2(include_str!("../../input/day1/example2.txt"));
         assert_eq!(
             example2.unwrap(),
             DayResult {
                 answers: Some(Answers::U32(281)),
             }
         );
-        let real2 = part2(include_str!("../../input/day1/real2.txt"));
+        let real2 = part2_sol2(include_str!("../../input/day1/real2.txt"));
         assert_eq!(
             real2.unwrap(),
             DayResult {
