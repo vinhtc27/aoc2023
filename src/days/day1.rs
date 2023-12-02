@@ -225,20 +225,20 @@ pub fn part2_sol3(input: &'static str) -> anyhow::Result<DayResult> {
 
 #[cfg(test)]
 mod tests {
-    use super::part1_sol4;
+    use super::part1_sol5;
     use super::part2_sol3;
     use crate::{Answers, DayResult};
 
     #[test]
     fn test_part1() {
-        let example1 = part1_sol4(include_str!("../../input/day1/example1.txt"));
+        let example1 = part1_sol5(include_str!("../../input/day1/example1.txt"));
         assert_eq!(
             example1.unwrap(),
             DayResult {
                 answers: Some(Answers::U32(142)),
             }
         );
-        let real1 = part1_sol4(include_str!("../../input/day1/real1.txt"));
+        let real1 = part1_sol5(include_str!("../../input/day1/real1.txt"));
         assert_eq!(
             real1.unwrap(),
             DayResult {
