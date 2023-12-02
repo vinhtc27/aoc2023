@@ -4,6 +4,18 @@ pub fn part1_sol1(input: &'static str) -> anyhow::Result<DayResult> {
     let part1: u32 = input
         .lines()
         .map(|line| {
+            let first = line.chars().find(|c| c.is_numeric()).unwrap();
+            let last = line.chars().rev().find(|c| c.is_numeric()).unwrap();
+            format!("{}{}", first, last).parse::<u32>().unwrap()
+        })
+        .sum();
+    (part1).into_result()
+}
+
+pub fn part1_sol2(input: &'static str) -> anyhow::Result<DayResult> {
+    let part1: u32 = input
+        .lines()
+        .map(|line| {
             let digits: Vec<u32> = line
                 .chars()
                 .filter(|c| c.is_ascii_digit())
@@ -14,18 +26,6 @@ pub fn part1_sol1(input: &'static str) -> anyhow::Result<DayResult> {
             } else {
                 digits[0] * 10 + digits.last().unwrap_or(&0)
             }
-        })
-        .sum();
-    (part1).into_result()
-}
-
-pub fn part1_sol2(input: &'static str) -> anyhow::Result<DayResult> {
-    let part1: u32 = input
-        .lines()
-        .map(|line| {
-            let first = line.chars().find(|c| c.is_numeric()).unwrap();
-            let last = line.chars().rev().find(|c| c.is_numeric()).unwrap();
-            format!("{}{}", first, last).parse::<u32>().unwrap()
         })
         .sum();
     (part1).into_result()
@@ -101,32 +101,6 @@ pub fn part1_sol5(input: &'static str) -> anyhow::Result<DayResult> {
     for number in numbers {
         part1 += number;
     }
-    (part1).into_result()
-}
-
-pub fn part1_sol6(input: &'static str) -> anyhow::Result<DayResult> {
-    let part1: u32 = input
-        .lines()
-        .map(|line| {
-            let line = line.as_bytes();
-            let mut first = 0u32;
-            let mut last = 0u32;
-            let mut initiated = false;
-            for byte in line {
-                if (48..58).contains(byte) {
-                    if initiated {
-                        last = *byte as u32 - 48;
-                    } else {
-                        first = *byte as u32 - 48;
-                        last = first;
-                        initiated = true;
-                    }
-                }
-            }
-            first * 10 + last
-        })
-        .sum();
-
     (part1).into_result()
 }
 
