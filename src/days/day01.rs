@@ -80,27 +80,53 @@ pub fn part1_sol5(input: &'static str) -> anyhow::Result<DayResult> {
     let mut numbers = Vec::with_capacity(20000);
     for line in input.lines() {
         let line = line.as_bytes();
-        let mut first_digit = 0u32;
-        let mut second_digit = 0u32;
+        let mut first = 0u32;
+        let mut last = 0u32;
         let mut initiated = false;
         for byte in line {
             if (48..58).contains(byte) {
                 if initiated {
-                    second_digit = *byte as u32 - 48;
+                    last = *byte as u32 - 48;
                 } else {
-                    first_digit = *byte as u32 - 48;
-                    second_digit = first_digit;
+                    first = *byte as u32 - 48;
+                    last = first;
                     initiated = true;
                 }
             }
         }
-        let number = first_digit * 10 + second_digit;
+        let number = first * 10 + last;
         numbers.push(number);
     }
     let mut part1: u32 = 0;
     for number in numbers {
         part1 += number;
     }
+    (part1).into_result()
+}
+
+pub fn part1_sol6(input: &'static str) -> anyhow::Result<DayResult> {
+    let part1: u32 = input
+        .lines()
+        .map(|line| {
+            let line = line.as_bytes();
+            let mut first = 0u32;
+            let mut last = 0u32;
+            let mut initiated = false;
+            for byte in line {
+                if (48..58).contains(byte) {
+                    if initiated {
+                        last = *byte as u32 - 48;
+                    } else {
+                        first = *byte as u32 - 48;
+                        last = first;
+                        initiated = true;
+                    }
+                }
+            }
+            first * 10 + last
+        })
+        .sum();
+
     (part1).into_result()
 }
 
