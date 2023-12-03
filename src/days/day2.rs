@@ -7,7 +7,7 @@ pub fn part1_sol1(input: &'static str) -> anyhow::Result<DayResult> {
         let mut is_valid = true;
         'GAME: for set in sets {
             for number_color in set.split(", ") {
-                let (number, color) = number_color.split_once(" ").unwrap();
+                let (number, color) = number_color.split_once(' ').unwrap();
                 let number_u32 = number.parse::<u32>().unwrap();
                 match color {
                     "red" => {
@@ -48,7 +48,7 @@ pub fn part2_sol1(input: &'static str) -> anyhow::Result<DayResult> {
         let mut min_blue = 0;
         for set in sets {
             for number_color in set.split(", ") {
-                let (number, color) = number_color.split_once(" ").unwrap();
+                let (number, color) = number_color.split_once(' ').unwrap();
                 let number_u32 = number.parse::<u32>().unwrap();
                 match color {
                     "red" => {

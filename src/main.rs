@@ -32,13 +32,13 @@ fn main() -> anyhow::Result<()> {
 }
 
 fn get_days() -> Vec<DayEntry> {
-    use days::day2;
+    use days::day3;
     vec![DayEntry {
-        part1s: vec![day2::part1_sol1],
-        real1: include_str!("../input/day2/real1.txt"),
-        example1: include_str!("../input/day2/example1.txt"),
-        part2s: vec![day2::part2_sol1],
-        real2: include_str!("../input/day2/real2.txt"),
-        example2: include_str!("../input/day2/example2.txt"),
+        part1s: vec![day3::part1_sol1],
+        real1: include_str!("../input/day3/real1.txt"),
+        example1: include_str!("../input/day3/example1.txt"),
+        part2s: vec![day3::part2_sol1],
+        real2: include_str!("../input/day3/real2.txt"),
+        example2: include_str!("../input/day3/example2.txt"),
     }]
 }
