@@ -4,14 +4,17 @@ use crate::{DayResult, IntoDayResult};
 
 pub fn part1_sol1(input: &'static str) -> anyhow::Result<DayResult> {
     let mut part1: u32 = 0;
-    let mut maps: Vec<Vec<char>> = Vec::new();
-    for line in input.lines() {
-        let mut collect: Vec<char> = line.chars().collect();
-        collect.push('.');
-        maps.push(collect);
-    }
+    let maps: Vec<Vec<char>> = input
+        .lines()
+        .map(|line| {
+            let mut collect: Vec<char> = line.chars().collect();
+            collect.push('.');
+            collect
+        })
+        .collect();
+
     for (i, line) in maps.iter().enumerate() {
-        let mut current_num = String::new();
+        let mut current_num = String::with_capacity(3);
         let mut j_start_some = None;
         for (j, c) in line.iter().enumerate() {
             if c.is_ascii_digit() {
@@ -91,15 +94,19 @@ pub fn part1_sol1(input: &'static str) -> anyhow::Result<DayResult> {
 
 pub fn part2_sol1(input: &'static str) -> anyhow::Result<DayResult> {
     let mut part2: u32 = 0;
-    let mut maps: Vec<Vec<char>> = Vec::new();
-    for line in input.lines() {
-        let mut collect: Vec<char> = line.chars().collect();
-        collect.push('.');
-        maps.push(collect);
-    }
-    let mut gears: HashMap<(u32, u32), Vec<u32>> = HashMap::new();
+    let maps: Vec<Vec<char>> = input
+        .lines()
+        .map(|line| {
+            let mut collect: Vec<char> = line.chars().collect();
+            collect.push('.');
+            collect
+        })
+        .collect();
+
+    let gear_num = input.matches('*').count();
+    let mut gears: HashMap<(u32, u32), Vec<u32>> = HashMap::with_capacity(gear_num);
     for (i, line) in maps.iter().enumerate() {
-        let mut current_num = String::new();
+        let mut current_num = String::with_capacity(3);
         let mut j_start_some = None;
         for (j, c) in line.iter().enumerate() {
             if c.is_ascii_digit() {
