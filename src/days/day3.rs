@@ -7,9 +7,9 @@ pub fn part1_sol1(input: &'static str) -> anyhow::Result<DayResult> {
     let maps: Vec<Vec<char>> = input
         .lines()
         .map(|line| {
-            let mut collect: Vec<char> = line.chars().collect();
-            collect.push('.');
-            collect
+            let mut char_line: Vec<char> = line.chars().collect();
+            char_line.push('.');
+            char_line
         })
         .collect();
 
@@ -97,14 +97,14 @@ pub fn part2_sol1(input: &'static str) -> anyhow::Result<DayResult> {
     let maps: Vec<Vec<char>> = input
         .lines()
         .map(|line| {
-            let mut collect: Vec<char> = line.chars().collect();
-            collect.push('.');
-            collect
+            let mut char_line: Vec<char> = line.chars().collect();
+            char_line.push('.');
+            char_line
         })
         .collect();
 
-    let gear_num = input.matches('*').count();
-    let mut gears: HashMap<(u32, u32), Vec<u32>> = HashMap::with_capacity(gear_num);
+    let mut gears: HashMap<(u32, u32), Vec<u32>> =
+        HashMap::with_capacity(input.matches('*').count());
     for (i, line) in maps.iter().enumerate() {
         let mut current_num = String::with_capacity(3);
         let mut j_start_some = None;
@@ -122,79 +122,44 @@ pub fn part2_sol1(input: &'static str) -> anyhow::Result<DayResult> {
                     if j_start > 0 {
                         // Check left
                         if &maps[i][j_start - 1] == &'*' {
-                            let key = &(i as u32, j_start as u32 - 1);
-                            if gears.get(key).is_none() {
-                                gears.insert(*key, vec![number]);
-                            } else {
-                                gears.get_mut(key).unwrap().push(number);
-                            }
+                            set_gears(&mut gears, &(i as u32, j_start as u32 - 1), number);
                         }
                     }
                     if j_end + 1 < line.len() {
                         // Check right
                         if &maps[i][j_end + 1] == &'*' {
-                            let key = &(i as u32, j_end as u32 + 1);
-                            if gears.get(key).is_none() {
-                                gears.insert(*key, vec![number]);
-                            } else {
-                                gears.get_mut(key).unwrap().push(number);
-                            }
+                            set_gears(&mut gears, &(i as u32, j_end as u32 + 1), number);
                         }
                     }
                     if i > 0 && j_start > 0 {
                         // Check up left
                         if &maps[i - 1][j_start - 1] == &'*' {
-                            let key = &(i as u32 - 1, j_start as u32 - 1);
-                            if gears.get(key).is_none() {
-                                gears.insert(*key, vec![number]);
-                            } else {
-                                gears.get_mut(key).unwrap().push(number);
-                            }
+                            set_gears(&mut gears, &(i as u32 - 1, j_start as u32 - 1), number);
                         }
                     }
                     if i + 1 < maps.len() && j_start > 0 {
                         // Check down left
                         if &maps[i + 1][j_start - 1] == &'*' {
-                            let key = &(i as u32 + 1, j_start as u32 - 1);
-                            if gears.get(key).is_none() {
-                                gears.insert(*key, vec![number]);
-                            } else {
-                                gears.get_mut(key).unwrap().push(number);
-                            }
+                            set_gears(&mut gears, &(i as u32 + 1, j_start as u32 - 1), number);
                         }
                     }
                     if i > 0 && j_end + 1 < line.len() {
                         // Check up right
                         if &maps[i - 1][j_end + 1] == &'*' {
-                            let key = &(i as u32 - 1, j_end as u32 + 1);
-                            if gears.get(key).is_none() {
-                                gears.insert(*key, vec![number]);
-                            } else {
-                                gears.get_mut(key).unwrap().push(number);
-                            }
+                            set_gears(&mut gears, &(i as u32 - 1, j_end as u32 + 1), number);
                         }
                     }
                     if i + 1 < maps.len() && j_end + 1 < line.len() {
                         // Check down right
                         if &maps[i + 1][j_end + 1] == &'*' {
-                            let key = &(i as u32 + 1, j_end as u32 + 1);
-                            if gears.get(key).is_none() {
-                                gears.insert(*key, vec![number]);
-                            } else {
-                                gears.get_mut(key).unwrap().push(number);
-                            }
+                            set_gears(&mut gears, &(i as u32 + 1, j_end as u32 + 1), number);
                         }
                     }
                     if i > 0 {
                         // Check up between
                         for k in j_start..j {
                             if &maps[i - 1][k] == &'*' {
-                                let key = &(i as u32 - 1, k as u32);
-                                if gears.get(key).is_none() {
-                                    gears.insert(*key, vec![number]);
-                                } else {
-                                    gears.get_mut(key).unwrap().push(number);
-                                }
+                                set_gears(&mut gears, &(i as u32 - 1, k as u32), number);
                             }
                         }
                     }
@@ -202,12 +167,7 @@ pub fn part2_sol1(input: &'static str) -> anyhow::Result<DayResult> {
                         // Check down between
                         for k in j_start..j {
                             if &maps[i + 1][k] == &'*' {
-                                let key = &(i as u32 + 1, k as u32);
-                                if gears.get(key).is_none() {
-                                    gears.insert(*key, vec![number]);
-                                } else {
-                                    gears.get_mut(key).unwrap().push(number);
-                                }
+                                set_gears(&mut gears, &(i as u32 + 1, k as u32), number);
                             }
                         }
                     }
@@ -223,6 +183,15 @@ pub fn part2_sol1(input: &'static str) -> anyhow::Result<DayResult> {
         }
     }
     (part2).into_result()
+}
+
+#[inline]
+fn set_gears(gears: &mut HashMap<(u32, u32), Vec<u32>>, key: &(u32, u32), number: u32) {
+    if gears.get(key).is_none() {
+        gears.insert(*key, vec![number]);
+    } else {
+        gears.get_mut(key).unwrap().push(number);
+    }
 }
 
 #[cfg(test)]
