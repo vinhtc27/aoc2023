@@ -95,13 +95,17 @@ where
 
 type Solutions = Vec<fn(&str) -> anyhow::Result<Answers>>;
 pub struct DayChallenge {
+    pub day: u8,
     pub part1s: Solutions,
     pub part2s: Solutions,
 }
 
 pub fn run_day_challenge(
-    day: usize,
-    DayChallenge { part1s, part2s }: &DayChallenge,
+    DayChallenge {
+        day,
+        part1s,
+        part2s,
+    }: &DayChallenge,
     is_exaple: bool,
 ) -> anyhow::Result<()> {
     let input1 = if is_exaple {
