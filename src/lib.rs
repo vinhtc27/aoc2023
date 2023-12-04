@@ -2,18 +2,8 @@ extern crate core;
 
 pub mod days;
 
-use std::fmt::{Display, Formatter};
+use std::fmt::Display;
 use std::time::Instant;
-
-use nom::combinator::opt;
-use nom::{
-    branch::alt,
-    bytes::complete::tag,
-    character::complete as character,
-    combinator::{all_consuming, map},
-    sequence::{pair, preceded},
-};
-use thiserror::Error;
 
 macro_rules! impl_answer_enum {
     ( $( ($variant:tt, $ty:ty) ),* ) => {
@@ -74,23 +64,7 @@ impl_answer_enum! {
     (I64, i64),
     (I32, i32),
     (I16, i16),
-    (I8, i8),
-    (Day10Result, Day10Result)
-}
-
-#[derive(Debug)]
-pub struct Day10Result([u64; 6]);
-
-impl Display for Day10Result {
-    fn fmt(&self, f: &mut Formatter<'_>) -> std::fmt::Result {
-        for line in self.0 {
-            let s: String = (0..40)
-                .map(|i| if (1 << i) & line != 0 { '#' } else { ' ' })
-                .collect();
-            writeln!(f, "{}", s)?
-        }
-        Ok(())
-    }
+    (I8, i8)
 }
 
 impl From<&'_ str> for Answers {
@@ -99,65 +73,55 @@ impl From<&'_ str> for Answers {
     }
 }
 
-pub trait IntoDayResult {
-    fn into_result(self) -> anyhow::Result<DayResult>;
+pub trait IntoAnswers {
+    fn into_answer(self) -> anyhow::Result<Answers>;
 }
 
-impl IntoDayResult for () {
-    fn into_result(self) -> anyhow::Result<DayResult> {
-        Ok(DayResult { answers: None })
+impl IntoAnswers for () {
+    fn into_answer(self) -> anyhow::Result<Answers> {
+        Ok(Answers::String("Empty unit () answers".to_string()))
     }
 }
 
-impl<A> IntoDayResult for A
+impl<A> IntoAnswers for A
 where
     A: Into<Answers>,
 {
-    fn into_result(self) -> anyhow::Result<DayResult> {
-        Ok(DayResult {
-            answers: Some(self.into()),
-        })
+    fn into_answer(self) -> anyhow::Result<Answers> {
+        Ok(self.into())
     }
 }
 
-#[derive(Debug, PartialEq, Eq)]
-pub struct DayResult {
-    pub answers: Option<Answers>,
-}
-
-pub struct DayEntry {
-    pub part1s: Vec<fn(&'static str) -> anyhow::Result<DayResult>>,
+pub struct DayChallenge {
+    pub part1s: Vec<fn(&'static str) -> anyhow::Result<Answers>>,
     pub real1: &'static str,
     pub example1: &'static str,
-    pub part2s: Vec<fn(&'static str) -> anyhow::Result<DayResult>>,
+    pub part2s: Vec<fn(&'static str) -> anyhow::Result<Answers>>,
     pub real2: &'static str,
     pub example2: &'static str,
 }
 
-pub fn run_day(
-    day: u32,
-    DayEntry {
+pub fn run_day_challenge(
+    day: usize,
+    DayChallenge {
         part1s,
         real1,
         example1,
         part2s,
         real2,
         example2,
-    }: &DayEntry,
+    }: &DayChallenge,
     is_exaple: bool,
 ) -> anyhow::Result<()> {
     let input1 = if is_exaple { *example1 } else { *real1 };
     println!("Day {} - Part 1:", day);
     for (sol, part) in part1s.iter().enumerate() {
         let now = Instant::now();
-        let result = part(input1)?;
+        let answers = part(input1)?;
         let duration = now.elapsed();
         print!("+ Solution {} | Output: ", sol + 1);
-        if let Some(output) = result.answers {
-            let output = format!("{output}");
-            for line in output.lines() {
-                print!("{line} ");
-            }
+        for line in answers.to_string().lines() {
+            print!("{line} ");
         }
         println!(
             "- Duration {} µs - {} ns",
@@ -165,19 +129,15 @@ pub fn run_day(
             duration.as_nanos()
         );
     }
-
     let input2 = if is_exaple { *example2 } else { *real2 };
     println!("Day {} - Part 2:", day);
     for (sol, part) in part2s.iter().enumerate() {
         let now = Instant::now();
-        let result = part(input2)?;
+        let answers = part(input2)?;
         let duration = now.elapsed();
         print!("+ Solution {} | Output: ", sol + 1);
-        if let Some(output) = result.answers {
-            let output = format!("{output}");
-            for line in output.lines() {
-                print!("{line} ");
-            }
+        for line in answers.to_string().lines() {
+            print!("{line} ");
         }
         println!(
             "- Duration {} µs - {} ns",
@@ -185,114 +145,6 @@ pub fn run_day(
             duration.as_nanos()
         );
     }
-
-    println!();
+    println!("____________________________________________________________");
     Ok(())
-}
-
-#[derive(Debug, Eq, PartialEq)]
-pub enum Runnable {
-    Latest,                          // empty
-    All,                             // .
-    Range { first: u32, last: u32 }, // 12-15
-}
-
-impl Runnable {
-    pub fn load_all<I: IntoIterator<Item = T>, T: AsRef<str>>(
-        source: I,
-    ) -> Result<Vec<Runnable>, ConversionError> {
-        let mut runnables = Vec::new();
-        for cmd in source {
-            let cmd = cmd.as_ref();
-            let runnable = cmd.try_into()?;
-            runnables.push(runnable);
-        }
-        if runnables.is_empty() {
-            runnables.push(Runnable::Latest);
-        }
-        Ok(runnables)
-    }
-}
-
-impl<'a> TryFrom<&'a str> for Runnable {
-    type Error = ConversionError;
-
-    fn try_from(value: &'a str) -> Result<Self, Self::Error> {
-        let res = parse_runnable(value).map(|r| r.1)?;
-
-        if let Runnable::Range { first, last } = res {
-            if first > last {
-                return Err(ConversionError::OutOfOrder);
-            }
-        }
-
-        Ok(res)
-    }
-}
-
-#[derive(Debug, Error, Eq, PartialEq)]
-pub enum ConversionError {
-    #[error("Input was incomplete")]
-    Incomplete,
-    #[error("Day range was not increasing")]
-    OutOfOrder,
-    #[error("Parse error: {0}")]
-    ParseError(String),
-    #[error("Parse failure: {0}")]
-    ParseFailure(String),
-}
-
-impl<T> From<nom::Err<nom::error::Error<T>>> for ConversionError {
-    fn from(err: nom::Err<nom::error::Error<T>>) -> Self {
-        match err {
-            nom::Err::Incomplete(_) => ConversionError::Incomplete,
-            nom::Err::Error(error) => ConversionError::ParseError(format!("{:?}", error.code)),
-            nom::Err::Failure(failure) => {
-                ConversionError::ParseFailure(format!("{:?}", failure.code))
-            }
-        }
-    }
-}
-
-fn parse_runnable(input: &str) -> nom::IResult<&str, Runnable> {
-    alt((
-        map(parse_latest, |_| Runnable::All),
-        map(parse_range, |(first, last)| Runnable::Range {
-            first,
-            last: last.unwrap_or(first),
-        }),
-    ))(input)
-}
-
-fn parse_latest(input: &str) -> nom::IResult<&str, &str> {
-    all_consuming(tag("."))(input)
-}
-
-fn parse_range(input: &str) -> nom::IResult<&str, (u32, Option<u32>)> {
-    all_consuming(pair(
-        character::u32,
-        opt(preceded(tag("-"), character::u32)),
-    ))(input)
-}
-
-#[cfg(test)]
-mod tests {
-    use crate::{parse_runnable, Runnable};
-
-    #[test]
-    fn no_args_defaults_to_latest() {
-        let runnables = Runnable::load_all::<[&str; 0], _>([]);
-        assert_eq!(runnables, Ok(vec![Runnable::Latest]));
-    }
-
-    #[test]
-    fn dot_arg_is_all() {
-        let runnables = Runnable::load_all::<_, _>(["."]);
-        assert_eq!(runnables, Ok(vec![Runnable::All]));
-    }
-
-    #[test]
-    fn parser_handles_latest() {
-        assert_eq!(parse_runnable("."), Ok(("", Runnable::All)));
-    }
 }

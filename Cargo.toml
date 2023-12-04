@@ -8,9 +8,7 @@ edition = "2021"
 [dependencies]
 anyhow = "1.0.75"
 daachorse = "1.0.0"
-nom = "7.1.3"
 num = "0.4.1"
-thiserror = "1.0.50"
 
 [dev-dependencies]
 criterion = "0.5.1"

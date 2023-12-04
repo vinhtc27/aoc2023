@@ -1,8 +1,8 @@
 use std::collections::HashMap;
 
-use crate::{DayResult, IntoDayResult};
+use crate::{Answers, IntoAnswers};
 
-pub fn part1_sol1(input: &'static str) -> anyhow::Result<DayResult> {
+pub fn part1_sol1(input: &'static str) -> anyhow::Result<Answers> {
     let mut part1: u32 = 0;
     let maps: Vec<Vec<char>> = input
         .lines()
@@ -89,10 +89,10 @@ pub fn part1_sol1(input: &'static str) -> anyhow::Result<DayResult> {
             }
         }
     }
-    (part1).into_result()
+    (part1).into_answer()
 }
 
-pub fn part2_sol1(input: &'static str) -> anyhow::Result<DayResult> {
+pub fn part2_sol1(input: &'static str) -> anyhow::Result<Answers> {
     let mut part2: u32 = 0;
     let maps: Vec<Vec<char>> = input
         .lines()
@@ -182,7 +182,7 @@ pub fn part2_sol1(input: &'static str) -> anyhow::Result<DayResult> {
             part2 += numbers[0] * numbers[1];
         }
     }
-    (part2).into_result()
+    (part2).into_answer()
 }
 
 #[inline]
@@ -198,41 +198,21 @@ fn set_gears(gears: &mut HashMap<(u32, u32), Vec<u32>>, key: (u32, u32), number:
 mod tests {
     use super::part1_sol1;
     use super::part2_sol1;
-    use crate::{Answers, DayResult};
+    use crate::Answers;
 
     #[test]
     fn test_part1() {
         let example1 = part1_sol1(include_str!("../../input/day3/example1.txt"));
-        assert_eq!(
-            example1.unwrap(),
-            DayResult {
-                answers: Some(Answers::U32(4361)),
-            }
-        );
+        assert_eq!(example1.unwrap(), Answers::U32(4361));
         let real1 = part1_sol1(include_str!("../../input/day3/real1.txt"));
-        assert_eq!(
-            real1.unwrap(),
-            DayResult {
-                answers: Some(Answers::U32(535351)),
-            }
-        );
+        assert_eq!(real1.unwrap(), Answers::U32(535351));
     }
 
     #[test]
     fn test_part2() {
         let example2 = part2_sol1(include_str!("../../input/day3/example2.txt"));
-        assert_eq!(
-            example2.unwrap(),
-            DayResult {
-                answers: Some(Answers::U32(467835)),
-            }
-        );
+        assert_eq!(example2.unwrap(), Answers::U32(467835));
         let real2 = part2_sol1(include_str!("../../input/day3/real2.txt"));
-        assert_eq!(
-            real2.unwrap(),
-            DayResult {
-                answers: Some(Answers::U32(87287096)),
-            }
-        );
+        assert_eq!(real2.unwrap(), Answers::U32(87287096));
     }
 }

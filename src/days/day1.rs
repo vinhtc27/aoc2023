@@ -1,7 +1,7 @@
-use crate::{DayResult, IntoDayResult};
+use crate::{Answers, IntoAnswers};
 use daachorse::DoubleArrayAhoCorasick;
 
-pub fn part1_sol1(input: &'static str) -> anyhow::Result<DayResult> {
+pub fn part1_sol1(input: &'static str) -> anyhow::Result<Answers> {
     let part1: u32 = input
         .lines()
         .map(|line| {
@@ -10,10 +10,10 @@ pub fn part1_sol1(input: &'static str) -> anyhow::Result<DayResult> {
             format!("{}{}", first, last).parse::<u32>().unwrap()
         })
         .sum();
-    (part1).into_result()
+    (part1).into_answer()
 }
 
-pub fn part1_sol2(input: &'static str) -> anyhow::Result<DayResult> {
+pub fn part1_sol2(input: &'static str) -> anyhow::Result<Answers> {
     let part1: u32 = input
         .lines()
         .map(|line| {
@@ -29,10 +29,10 @@ pub fn part1_sol2(input: &'static str) -> anyhow::Result<DayResult> {
             }
         })
         .sum();
-    (part1).into_result()
+    (part1).into_answer()
 }
 
-pub fn part1_sol3(input: &'static str) -> anyhow::Result<DayResult> {
+pub fn part1_sol3(input: &'static str) -> anyhow::Result<Answers> {
     let part1: u32 = input
         .lines()
         .map(|line| {
@@ -51,10 +51,10 @@ pub fn part1_sol3(input: &'static str) -> anyhow::Result<DayResult> {
             first.unwrap_or(0) * 10 + last.unwrap_or(0)
         })
         .sum();
-    (part1).into_result()
+    (part1).into_answer()
 }
 
-pub fn part1_sol4(input: &'static str) -> anyhow::Result<DayResult> {
+pub fn part1_sol4(input: &'static str) -> anyhow::Result<Answers> {
     let part1: u32 = input
         .lines()
         .map(|line| {
@@ -74,10 +74,10 @@ pub fn part1_sol4(input: &'static str) -> anyhow::Result<DayResult> {
         })
         .sum();
 
-    (part1).into_result()
+    (part1).into_answer()
 }
 
-pub fn part1_sol5(input: &'static str) -> anyhow::Result<DayResult> {
+pub fn part1_sol5(input: &'static str) -> anyhow::Result<Answers> {
     let mut numbers = Vec::with_capacity(20000);
     for line in input.lines() {
         let line = line.as_bytes();
@@ -102,10 +102,10 @@ pub fn part1_sol5(input: &'static str) -> anyhow::Result<DayResult> {
     for number in numbers {
         part1 += number;
     }
-    (part1).into_result()
+    (part1).into_answer()
 }
 
-pub fn part2_sol1(input: &'static str) -> anyhow::Result<DayResult> {
+pub fn part2_sol1(input: &'static str) -> anyhow::Result<Answers> {
     let nums: Vec<&str> = vec![
         "one", "two", "three", "four", "five", "six", "seven", "eight", "nine",
     ];
@@ -142,10 +142,10 @@ pub fn part2_sol1(input: &'static str) -> anyhow::Result<DayResult> {
         part2 += first.unwrap() * 10 + last.unwrap()
     }
 
-    (part2).into_result()
+    (part2).into_answer()
 }
 
-pub fn part2_sol2(input: &'static str) -> anyhow::Result<DayResult> {
+pub fn part2_sol2(input: &'static str) -> anyhow::Result<Answers> {
     let patterns = vec![
         ("one", 1),
         ("two", 2),
@@ -181,10 +181,10 @@ pub fn part2_sol2(input: &'static str) -> anyhow::Result<DayResult> {
     for number in numbers {
         part2 += number as u32;
     }
-    (part2).into_result()
+    (part2).into_answer()
 }
 
-pub fn part2_sol3(input: &'static str) -> anyhow::Result<DayResult> {
+pub fn part2_sol3(input: &'static str) -> anyhow::Result<Answers> {
     let part2: u32 = input
         .lines()
         .map(|line| {
@@ -220,48 +220,28 @@ pub fn part2_sol3(input: &'static str) -> anyhow::Result<DayResult> {
             }
         })
         .sum();
-    (part2).into_result()
+    (part2).into_answer()
 }
 
 #[cfg(test)]
 mod tests {
     use super::part1_sol5;
     use super::part2_sol3;
-    use crate::{Answers, DayResult};
+    use crate::Answers;
 
     #[test]
     fn test_part1() {
         let example1 = part1_sol5(include_str!("../../input/day1/example1.txt"));
-        assert_eq!(
-            example1.unwrap(),
-            DayResult {
-                answers: Some(Answers::U32(142)),
-            }
-        );
+        assert_eq!(example1.unwrap(), Answers::U32(142));
         let real1 = part1_sol5(include_str!("../../input/day1/real1.txt"));
-        assert_eq!(
-            real1.unwrap(),
-            DayResult {
-                answers: Some(Answers::U32(54601)),
-            }
-        );
+        assert_eq!(real1.unwrap(), Answers::U32(54601));
     }
 
     #[test]
     fn test_part2() {
         let example2 = part2_sol3(include_str!("../../input/day1/example2.txt"));
-        assert_eq!(
-            example2.unwrap(),
-            DayResult {
-                answers: Some(Answers::U32(281)),
-            }
-        );
+        assert_eq!(example2.unwrap(), Answers::U32(281));
         let real2 = part2_sol3(include_str!("../../input/day1/real2.txt"));
-        assert_eq!(
-            real2.unwrap(),
-            DayResult {
-                answers: Some(Answers::U32(54078)),
-            }
-        );
+        assert_eq!(real2.unwrap(), Answers::U32(54078));
     }
 }
