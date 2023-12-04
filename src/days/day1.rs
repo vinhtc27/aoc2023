@@ -1,7 +1,7 @@
 use crate::{Answers, IntoAnswers};
 use daachorse::DoubleArrayAhoCorasick;
 
-pub fn part1_sol1(input: &'static str) -> anyhow::Result<Answers> {
+pub fn part1_sol1(input: &str) -> anyhow::Result<Answers> {
     let part1: u32 = input
         .lines()
         .map(|line| {
@@ -13,7 +13,7 @@ pub fn part1_sol1(input: &'static str) -> anyhow::Result<Answers> {
     (part1).into_answer()
 }
 
-pub fn part1_sol2(input: &'static str) -> anyhow::Result<Answers> {
+pub fn part1_sol2(input: &str) -> anyhow::Result<Answers> {
     let part1: u32 = input
         .lines()
         .map(|line| {
@@ -32,7 +32,7 @@ pub fn part1_sol2(input: &'static str) -> anyhow::Result<Answers> {
     (part1).into_answer()
 }
 
-pub fn part1_sol3(input: &'static str) -> anyhow::Result<Answers> {
+pub fn part1_sol3(input: &str) -> anyhow::Result<Answers> {
     let part1: u32 = input
         .lines()
         .map(|line| {
@@ -54,7 +54,7 @@ pub fn part1_sol3(input: &'static str) -> anyhow::Result<Answers> {
     (part1).into_answer()
 }
 
-pub fn part1_sol4(input: &'static str) -> anyhow::Result<Answers> {
+pub fn part1_sol4(input: &str) -> anyhow::Result<Answers> {
     let part1: u32 = input
         .lines()
         .map(|line| {
@@ -77,7 +77,7 @@ pub fn part1_sol4(input: &'static str) -> anyhow::Result<Answers> {
     (part1).into_answer()
 }
 
-pub fn part1_sol5(input: &'static str) -> anyhow::Result<Answers> {
+pub fn part1_sol5(input: &str) -> anyhow::Result<Answers> {
     let mut numbers = Vec::with_capacity(20000);
     for line in input.lines() {
         let line = line.as_bytes();
@@ -105,7 +105,7 @@ pub fn part1_sol5(input: &'static str) -> anyhow::Result<Answers> {
     (part1).into_answer()
 }
 
-pub fn part2_sol1(input: &'static str) -> anyhow::Result<Answers> {
+pub fn part2_sol1(input: &str) -> anyhow::Result<Answers> {
     let nums: Vec<&str> = vec![
         "one", "two", "three", "four", "five", "six", "seven", "eight", "nine",
     ];
@@ -145,7 +145,7 @@ pub fn part2_sol1(input: &'static str) -> anyhow::Result<Answers> {
     (part2).into_answer()
 }
 
-pub fn part2_sol2(input: &'static str) -> anyhow::Result<Answers> {
+pub fn part2_sol2(input: &str) -> anyhow::Result<Answers> {
     let patterns = vec![
         ("one", 1),
         ("two", 2),
@@ -184,7 +184,7 @@ pub fn part2_sol2(input: &'static str) -> anyhow::Result<Answers> {
     (part2).into_answer()
 }
 
-pub fn part2_sol3(input: &'static str) -> anyhow::Result<Answers> {
+pub fn part2_sol3(input: &str) -> anyhow::Result<Answers> {
     let part2: u32 = input
         .lines()
         .map(|line| {

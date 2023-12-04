@@ -1,11 +1,11 @@
 use crate::{Answers, IntoAnswers};
 
-pub fn part1_sol1(_input: &'static str) -> anyhow::Result<Answers> {
+pub fn part1_sol1(_input: &str) -> anyhow::Result<Answers> {
     let part1: u32 = 0;
     (part1).into_answer()
 }
 
-pub fn part2_sol1(_input: &'static str) -> anyhow::Result<Answers> {
+pub fn part2_sol1(_input: &str) -> anyhow::Result<Answers> {
     let part2: u32 = 0;
     (part2).into_answer()
 }

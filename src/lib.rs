@@ -3,6 +3,7 @@ extern crate core;
 pub mod days;
 
 use std::fmt::Display;
+use std::fs;
 use std::time::Instant;
 
 macro_rules! impl_answer_enum {
@@ -92,32 +93,26 @@ where
     }
 }
 
+type Solutions = Vec<fn(&str) -> anyhow::Result<Answers>>;
 pub struct DayChallenge {
-    pub part1s: Vec<fn(&'static str) -> anyhow::Result<Answers>>,
-    pub real1: &'static str,
-    pub example1: &'static str,
-    pub part2s: Vec<fn(&'static str) -> anyhow::Result<Answers>>,
-    pub real2: &'static str,
-    pub example2: &'static str,
+    pub part1s: Solutions,
+    pub part2s: Solutions,
 }
 
 pub fn run_day_challenge(
     day: usize,
-    DayChallenge {
-        part1s,
-        real1,
-        example1,
-        part2s,
-        real2,
-        example2,
-    }: &DayChallenge,
+    DayChallenge { part1s, part2s }: &DayChallenge,
     is_exaple: bool,
 ) -> anyhow::Result<()> {
-    let input1 = if is_exaple { *example1 } else { *real1 };
+    let input1 = if is_exaple {
+        fs::read_to_string(format!("./input/day{}/example1.txt", day))?
+    } else {
+        fs::read_to_string(format!("./input/day{}/real1.txt", day))?
+    };
     println!("Day {} - Part 1:", day);
     for (sol, part) in part1s.iter().enumerate() {
         let now = Instant::now();
-        let answers = part(input1)?;
+        let answers = part(input1.as_str())?;
         let duration = now.elapsed();
         print!("+ Solution {} | Output: ", sol + 1);
         for line in answers.to_string().lines() {
@@ -129,11 +124,15 @@ pub fn run_day_challenge(
             duration.as_nanos()
         );
     }
-    let input2 = if is_exaple { *example2 } else { *real2 };
+    let input2 = if is_exaple {
+        fs::read_to_string(format!("./input/day{}/example2.txt", day))?
+    } else {
+        fs::read_to_string(format!("./input/day{}/real2.txt", day))?
+    };
     println!("Day {} - Part 2:", day);
     for (sol, part) in part2s.iter().enumerate() {
         let now = Instant::now();
-        let answers = part(input2)?;
+        let answers = part(input2.as_str())?;
         let duration = now.elapsed();
         print!("+ Solution {} | Output: ", sol + 1);
         for line in answers.to_string().lines() {

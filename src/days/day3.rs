@@ -2,7 +2,7 @@ use std::collections::HashMap;
 
 use crate::{Answers, IntoAnswers};
 
-pub fn part1_sol1(input: &'static str) -> anyhow::Result<Answers> {
+pub fn part1_sol1(input: &str) -> anyhow::Result<Answers> {
     let mut part1: u32 = 0;
     let maps: Vec<Vec<char>> = input
         .lines()
@@ -92,7 +92,7 @@ pub fn part1_sol1(input: &'static str) -> anyhow::Result<Answers> {
     (part1).into_answer()
 }
 
-pub fn part2_sol1(input: &'static str) -> anyhow::Result<Answers> {
+pub fn part2_sol1(input: &str) -> anyhow::Result<Answers> {
     let mut part2: u32 = 0;
     let maps: Vec<Vec<char>> = input
         .lines()
