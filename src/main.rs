@@ -11,7 +11,7 @@ fn main() -> anyhow::Result<()> {
 }
 
 fn get_days() -> Vec<DayChallenge> {
-    use days::day4;
+    use days::day6;
     vec![
         // DayChallenge {
         //     day: 2,
@@ -19,9 +19,9 @@ fn get_days() -> Vec<DayChallenge> {
         //     part2s: vec![day2::part2_sol1, day2::part2_sol2],
         // },
         DayChallenge {
-            day: 4,
-            part1s: vec![day4::part1_sol1],
-            part2s: vec![day4::part2_sol1],
+            day: 6,
+            part1s: vec![day6::part1_sol1, day6::part1_sol2],
+            part2s: vec![day6::part2_sol1, day6::part2_sol2],
         },
     ]
 }
